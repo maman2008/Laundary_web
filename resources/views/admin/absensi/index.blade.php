@@ -8,12 +8,8 @@
             <div class="bg-white p-6 rounded shadow-sm">
                 <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
                     <div>
-                        <label class="block text-sm text-gray-600 mb-1">Dari Tanggal</label>
-                        <input type="date" name="from" value="{{ $from }}" class="w-full border rounded px-3 py-2">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-600 mb-1">Sampai Tanggal</label>
-                        <input type="date" name="until" value="{{ $until }}" class="w-full border rounded px-3 py-2">
+                        <label class="block text-sm text-gray-600 mb-1">Tanggal</label>
+                        <input type="date" name="date" value="{{ $date }}" class="w-full border rounded px-3 py-2">
                     </div>
                     <div class="flex items-end">
                         <label class="inline-flex items-center gap-2">
@@ -66,3 +62,4 @@
         </div>
     </div>
 </x-app-layout>
+
