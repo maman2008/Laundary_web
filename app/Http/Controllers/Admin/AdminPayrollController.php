@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payroll;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,52 @@ class AdminPayrollController extends Controller
             ->paginate(15)->withQueryString();
 
         return view('admin.gaji.index', compact('payrolls', 'status', 'year', 'month'));
+    }
+
+    public function create(): View
+    {
+        $users = User::orderBy('name')->get(['id','name']);
+        $currentYear = now()->year;
+        $currentMonth = now()->month;
+        return view('admin.gaji.create', compact('users', 'currentYear', 'currentMonth'));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'period_year' => ['required', 'integer', 'min:2000', 'max:2100'],
+            'period_month' => ['required', 'integer', 'min:1', 'max:12'],
+            'amount' => ['required', 'numeric', 'min:0'],
+            'notes' => ['nullable', 'string'],
+            'transfer_proof' => ['required', 'file', 'max:5120', 'mimes:jpg,jpeg,png,pdf'],
+        ]);
+
+        // Prevent duplicate payroll for same user and period
+        $exists = Payroll::where('user_id', $validated['user_id'])
+            ->where('period_year', $validated['period_year'])
+            ->where('period_month', $validated['period_month'])
+            ->exists();
+        if ($exists) {
+            return back()->withInput()->with('status', 'Payroll untuk periode tersebut sudah ada.');
+        }
+
+        $transferProofPath = null;
+        if ($request->hasFile('transfer_proof')) {
+            $transferProofPath = $request->file('transfer_proof')->store('transfer_proofs', 'public');
+        }
+
+        Payroll::create([
+            'user_id' => $validated['user_id'],
+            'period_year' => $validated['period_year'],
+            'period_month' => $validated['period_month'],
+            'amount' => $validated['amount'],
+            'status' => 'pending',
+            'notes' => $validated['notes'] ?? null,
+            'transfer_proof_path' => $transferProofPath,
+        ]);
+
+        return redirect()->route('admin.payroll.index')->with('status', 'Payroll berhasil dibuat.');
     }
 
     public function markPaid(int $id): RedirectResponse

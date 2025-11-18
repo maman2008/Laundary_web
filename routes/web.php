@@ -57,9 +57,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
 
     // Gaji
     Route::get('/gaji', [AdminPayrollController::class, 'index'])->name('payroll.index');
+    Route::get('/gaji/buat', [AdminPayrollController::class, 'create'])->name('payroll.create');
+    Route::post('/gaji', [AdminPayrollController::class, 'store'])->name('payroll.store');
     Route::post('/gaji/{id}/mark-paid', [AdminPayrollController::class, 'markPaid'])->name('payroll.markPaid');
-    Route::post('/gaji/{id}/upload-proof', [AdminPayrollController::class, 'uploadProof'])->name('payroll.uploadProof');
-    Route::post('/gaji/{id}/generate-slip', [AdminPayrollController::class, 'generateSlip'])->name('payroll.generateSlip');
+    // Upload bukti & slip dihapus dari daftar; bukti diunggah saat membuat payroll
 });
 
 require __DIR__.'/auth.php';
