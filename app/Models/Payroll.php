@@ -20,6 +20,15 @@ class Payroll extends Model
         'notes',
     ];
 
+    /**
+     * Cast attributes.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'paid_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
