@@ -33,6 +33,7 @@
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tipe</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Judul</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Pengajuan</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Deskripsi</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Lampiran</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                 <th class="px-4 py-2"></th>
@@ -45,6 +46,16 @@
                                     <td class="px-4 py-2 text-sm">{{ ucwords(str_replace('_',' ', $r->type)) }}</td>
                                     <td class="px-4 py-2 text-sm">{{ $r->title }}</td>
                                     <td class="px-4 py-2 text-sm text-gray-700">{{ $r->created_at?->format('Y-m-d H:i') }}</td>
+                                    <td class="px-4 py-2 text-sm text-gray-700 align-top">
+                                        @if ($r->description)
+                                            <details class="text-xs">
+                                                <summary class="cursor-pointer text-indigo-600 hover:underline">Lihat</summary>
+                                                <div class="mt-2 p-3 border rounded bg-gray-50 whitespace-pre-line max-w-lg">{{ $r->description }}</div>
+                                            </details>
+                                        @else
+                                            <span class="text-gray-400">-</span>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-2 text-sm">
                                         @if ($r->attachment_path)
                                             <a href="{{ asset('storage/'.$r->attachment_path) }}" target="_blank" class="text-indigo-600 hover:underline">Lihat</a>
@@ -56,16 +67,20 @@
                                         <span class="px-2 py-1 rounded text-xs {{ $r->status==='accepted' ? 'bg-emerald-100 text-emerald-700' : ($r->status==='rejected' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700') }}">{{ ucfirst($r->status) }}</span>
                                     </td>
                                     <td class="px-4 py-2 text-sm">
-                                        <div class="flex gap-2">
-                                            <form method="POST" action="{{ route('admin.requests.accept', $r->id) }}">
-                                                @csrf
-                                                <button class="px-3 py-1 rounded bg-emerald-600 text-white text-xs" @disabled($r->status==='accepted')>Terima</button>
-                                            </form>
-                                            <form method="POST" action="{{ route('admin.requests.reject', $r->id) }}">
-                                                @csrf
-                                                <button class="px-3 py-1 rounded bg-rose-600 text-white text-xs" @disabled($r->status==='rejected')>Tolak</button>
-                                            </form>
-                                        </div>
+                                        @if ($r->status==='pending')
+                                            <div class="flex gap-2">
+                                                <form method="POST" action="{{ route('admin.requests.accept', $r->id) }}">
+                                                    @csrf
+                                                    <button class="px-3 py-1 rounded bg-emerald-600 text-white text-xs">Terima</button>
+                                                </form>
+                                                <form method="POST" action="{{ route('admin.requests.reject', $r->id) }}">
+                                                    @csrf
+                                                    <button class="px-3 py-1 rounded bg-rose-600 text-white text-xs">Tolak</button>
+                                                </form>
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400 text-xs">Sudah diproses</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

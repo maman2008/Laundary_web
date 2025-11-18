@@ -50,12 +50,18 @@ class EmployeeRequestController extends Controller
     public function edit(int $id)
     {
         $req = EmployeeRequest::where('user_id', Auth::id())->findOrFail($id);
+        if ($req->status !== 'pending') {
+            return redirect()->route('requests.index')->with('status', 'Pengajuan tidak dapat diedit karena sudah diproses.');
+        }
         return view('requests.edit', compact('req'));
     }
 
     public function update(Request $request, int $id)
     {
         $req = EmployeeRequest::where('user_id', Auth::id())->findOrFail($id);
+        if ($req->status !== 'pending') {
+            return redirect()->route('requests.index')->with('status', 'Pengajuan tidak dapat diedit karena sudah diproses.');
+        }
 
         $validated = $request->validate([
             'type' => ['required', 'in:kerusakan_barang,kekurangan_barang'],
@@ -82,6 +88,9 @@ class EmployeeRequestController extends Controller
     public function destroy(int $id)
     {
         $req = EmployeeRequest::where('user_id', Auth::id())->findOrFail($id);
+        if ($req->status !== 'pending') {
+            return back()->with('status', 'Pengajuan tidak dapat dihapus karena sudah diproses.');
+        }
         if ($req->attachment_path) {
             Storage::disk('public')->delete($req->attachment_path);
         }
