@@ -16,9 +16,8 @@
                             <x-input-label for="type" :value="__('Tipe Pengajuan')" />
                             <select id="type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="" disabled selected>Pilih tipe</option>
-                                <option value="damage" @selected(old('type')==='damage')>Kerusakan</option>
-                                <option value="shortage" @selected(old('type')==='shortage')>Barang Kurang</option>
-                                <option value="leave" @selected(old('type')==='leave')>Izin</option>
+                                <option value="kerusakan_barang" @selected(old('type')==='kerusakan_barang')>Kerusakan Barang</option>
+                                <option value="kekurangan_barang" @selected(old('type')==='kekurangan_barang')>Kekurangan Barang</option>
                             </select>
                             <x-input-error :messages="$errors->get('type')" class="mt-2" />
                         </div>
@@ -35,18 +34,7 @@
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <x-input-label for="start_date" :value="__('Tanggal Mulai')" />
-                                <x-text-input id="start_date" class="block mt-1 w-full" type="date" name="start_date" :value="old('start_date')" />
-                                <x-input-error :messages="$errors->get('start_date')" class="mt-2" />
-                            </div>
-                            <div>
-                                <x-input-label for="end_date" :value="__('Tanggal Selesai')" />
-                                <x-text-input id="end_date" class="block mt-1 w-full" type="date" name="end_date" :value="old('end_date')" />
-                                <x-input-error :messages="$errors->get('end_date')" class="mt-2" />
-                            </div>
-                        </div>
+                        
 
                         <div>
                             <x-input-label for="attachment" :value="__('Lampiran (opsional)')" />

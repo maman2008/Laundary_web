@@ -32,7 +32,7 @@
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Karyawan</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tipe</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Judul</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Pengajuan</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Lampiran</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                 <th class="px-4 py-2"></th>
@@ -42,9 +42,9 @@
                             @foreach ($requests as $r)
                                 <tr>
                                     <td class="px-4 py-2 text-sm">{{ $r->user->name }}</td>
-                                    <td class="px-4 py-2 text-sm">{{ ucfirst($r->type) }}</td>
+                                    <td class="px-4 py-2 text-sm">{{ ucwords(str_replace('_',' ', $r->type)) }}</td>
                                     <td class="px-4 py-2 text-sm">{{ $r->title }}</td>
-                                    <td class="px-4 py-2 text-sm">{{ $r->start_date }} @if($r->end_date) - {{ $r->end_date }} @endif</td>
+                                    <td class="px-4 py-2 text-sm text-gray-700">{{ $r->created_at?->format('Y-m-d H:i') }}</td>
                                     <td class="px-4 py-2 text-sm">
                                         @if ($r->attachment_path)
                                             <a href="{{ asset('storage/'.$r->attachment_path) }}" target="_blank" class="text-indigo-600 hover:underline">Lihat</a>

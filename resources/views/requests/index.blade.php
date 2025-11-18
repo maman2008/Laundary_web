@@ -21,18 +21,21 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Pengajuan</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lampiran</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($requests as $req)
                                     <tr>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $req->created_at->format('Y-m-d H:i') }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-700">{{ ucfirst($req->type) }}</td>
+                                        <td class="px-4 py-3 text-sm">
+                                            <span class="px-2 py-1 rounded text-xs bg-blue-50 text-blue-700">{{ ucwords(str_replace('_',' ', $req->type)) }}</span>
+                                        </td>
                                         <td class="px-4 py-3 text-sm text-gray-900 font-medium">{{ $req->title }}</td>
                                         <td class="px-4 py-3 text-sm">
                                             <span class="px-2 py-1 rounded text-xs {{ $req->status === 'accepted' ? 'bg-green-100 text-green-700' : ($req->status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">{{ ucfirst($req->status) }}</span>
@@ -43,6 +46,16 @@
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
+                                        </td>
+                                        <td class="px-4 py-3 text-sm">
+                                            <div class="flex items-center gap-2">
+                                                <a href="{{ route('requests.edit', $req->id) }}" class="px-3 py-1 rounded bg-gray-100 text-gray-700 text-xs">Edit</a>
+                                                <form method="POST" action="{{ route('requests.destroy', $req->id) }}" onsubmit="return confirm('Hapus pengajuan ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="px-3 py-1 rounded bg-rose-600 text-white text-xs">Hapus</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty

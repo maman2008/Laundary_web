@@ -34,6 +34,9 @@ Route::middleware(['auth', 'role:karyawan'])->group(function () {
     Route::get('/pengajuan', [EmployeeRequestController::class, 'index'])->name('requests.index');
     Route::get('/pengajuan/buat', [EmployeeRequestController::class, 'create'])->name('requests.create');
     Route::post('/pengajuan', [EmployeeRequestController::class, 'store'])->name('requests.store');
+    Route::get('/pengajuan/{id}/edit', [EmployeeRequestController::class, 'edit'])->name('requests.edit');
+    Route::put('/pengajuan/{id}', [EmployeeRequestController::class, 'update'])->name('requests.update');
+    Route::delete('/pengajuan/{id}', [EmployeeRequestController::class, 'destroy'])->name('requests.destroy');
 
     // Gaji karyawan
     Route::get('/gaji', [PayrollController::class, 'index'])->name('payrolls.index');
