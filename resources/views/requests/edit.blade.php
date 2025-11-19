@@ -1,59 +1,433 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Edit Pengajuan
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Pengajuan - Laundry HR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        'primary-light': '#4895ef',
+                        secondary: '#3f37c9',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        info: '#3b82f6',
+                        dark: '#212529',
+                        gray: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'medium': '0 8px 25px rgba(0, 0, 0, 0.12)',
+                    },
+                    borderRadius: {
+                        'xl': '12px',
+                        '2xl': '16px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .form-card {
+            transition: all 0.3s ease;
+        }
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+        }
+        .file-upload-area {
+            transition: all 0.3s ease;
+        }
+        .file-upload-area.dragover {
+            border-color: #4361ee;
+            background-color: #f0f4ff;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-4">
+                        <!-- Tombol Kembali -->
+                        <a href="{{ route('requests.index') }}" class="flex items-center space-x-2 text-primary hover:text-secondary transition-colors">
+                            <i class="fas fa-arrow-left"></i>
+                            <span class="hidden sm:inline">Kembali ke Daftar Pengajuan</span>
+                        </a>
+                        <div class="h-6 border-l border-gray-300"></div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Edit Pengajuan</h1>
+                            <p class="text-sm text-gray-600 mt-1">Perbarui data pengajuan yang telah dibuat</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-bell"></i>
+                            </button>
+                            <span class="absolute top-0 right-0 flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-warning opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-warning"></span>
+                            </span>
+                        </div>
+                        <div class="flex items-center space-x-2 bg-gray-100 rounded-full pl-2 pr-4 py-1">
+                            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-medium">K</div>
+                            <span class="text-sm font-medium">Karyawan User</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    <div class="py-6">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ route('requests.update', $req->id) }}" enctype="multipart/form-data" class="space-y-6">
+        <!-- Main Content -->
+        <main class="py-6">
+            <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+                <!-- Status Info -->
+                @if($req->status !== 'pending')
+                <div class="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-sm flex items-center">
+                    <i class="fas fa-exclamation-triangle mr-2 text-amber-500"></i>
+                    <div>
+                        <span class="font-medium">Perhatian:</span> Pengajuan ini sudah diproses ({{ ucfirst($req->status) }}). 
+                        Perubahan mungkin tidak dapat diterapkan jika pengajuan sudah disetujui atau ditolak.
+                    </div>
+                </div>
+                @endif
+
+                <!-- Form Card -->
+                <div class="bg-white rounded-2xl shadow-soft overflow-hidden form-card">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary to-primary-light">
+                        <h2 class="text-lg font-semibold text-white">Form Edit Pengajuan</h2>
+                        <p class="text-primary-light text-sm mt-1">Perbarui informasi pengajuan dengan data yang benar</p>
+                    </div>
+
+                    <form method="POST" action="{{ route('requests.update', $req->id) }}" enctype="multipart/form-data" class="p-6 space-y-6">
                         @csrf
                         @method('PUT')
 
+                        <!-- Status Info -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-gray-700">Status Saat Ini:</span>
+                                    @if($req->status === 'accepted')
+                                        <span class="status-badge bg-emerald-100 text-emerald-700">
+                                            <i class="fas fa-check-circle mr-1"></i>
+                                            Diterima
+                                        </span>
+                                    @elseif($req->status === 'rejected')
+                                        <span class="status-badge bg-rose-100 text-rose-700">
+                                            <i class="fas fa-times-circle mr-1"></i>
+                                            Ditolak
+                                        </span>
+                                    @else
+                                        <span class="status-badge bg-amber-100 text-amber-700">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            Pending
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                Dibuat: {{ $req->created_at->format('d M Y H:i') }}
+                            </div>
+                        </div>
+
+                        <!-- Tipe Pengajuan -->
                         <div>
-                            <x-input-label for="type" :value="__('Tipe Pengajuan')" />
-                            <select id="type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                            <label for="type" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-tag mr-2 text-primary"></i>
+                                Tipe Pengajuan
+                                <span class="text-rose-500 ml-1">*</span>
+                            </label>
+                            <select id="type" name="type" class="w-full border border-gray-300 rounded-xl px-4 py-3 form-input focus:ring-2 focus:ring-primary focus:border-primary transition-all" required
+                                    {{ $req->status !== 'pending' ? 'disabled' : '' }}>
                                 <option value="kerusakan_barang" @selected(old('type', $req->type)==='kerusakan_barang')>Kerusakan Barang</option>
                                 <option value="kekurangan_barang" @selected(old('type', $req->type)==='kekurangan_barang')>Kekurangan Barang</option>
                             </select>
-                            <x-input-error :messages="$errors->get('type')" class="mt-2" />
+                            @if($req->status !== 'pending')
+                            <div class="mt-1 text-xs text-amber-600 flex items-center">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Tipe pengajuan tidak dapat diubah karena status sudah diproses
+                            </div>
+                            @endif
+                            @error('type')
+                                <div class="flex items-center mt-2 text-sm text-rose-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
+                        <!-- Judul -->
                         <div>
-                            <x-input-label for="title" :value="__('Judul')" />
-                            <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title', $req->title)" required />
-                            <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-heading mr-2 text-primary"></i>
+                                Judul Pengajuan
+                                <span class="text-rose-500 ml-1">*</span>
+                            </label>
+                            <input id="title" name="title" type="text" value="{{ old('title', $req->title) }}" 
+                                   class="w-full border border-gray-300 rounded-xl px-4 py-3 form-input focus:ring-2 focus:ring-primary focus:border-primary transition-all" 
+                                   placeholder="Masukkan judul pengajuan yang jelas dan deskriptif" 
+                                   {{ $req->status !== 'pending' ? 'readonly' : '' }} required>
+                            @error('title')
+                                <div class="flex items-center mt-2 text-sm text-rose-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
+                        <!-- Deskripsi -->
                         <div>
-                            <x-input-label for="description" :value="__('Deskripsi')" />
-                            <textarea id="description" name="description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('description', $req->description) }}</textarea>
-                            <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-align-left mr-2 text-primary"></i>
+                                Deskripsi Lengkap
+                            </label>
+                            <textarea id="description" name="description" rows="5" 
+                                      class="w-full border border-gray-300 rounded-xl px-4 py-3 form-input focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-none"
+                                      placeholder="Jelaskan secara detail mengenai pengajuan Anda..."
+                                      {{ $req->status !== 'pending' ? 'readonly' : '' }}>{{ old('description', $req->description) }}</textarea>
+                            <div class="flex justify-between items-center mt-1">
+                                <span class="text-xs text-gray-500">Deskripsi yang jelas akan mempermudah proses verifikasi</span>
+                                <span id="charCount" class="text-xs text-gray-400">{{ strlen(old('description', $req->description)) }} karakter</span>
+                            </div>
+                            @error('description')
+                                <div class="flex items-center mt-2 text-sm text-rose-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
+                        <!-- Lampiran -->
                         <div>
-                            <x-input-label for="attachment" :value="__('Lampiran (opsional)')" />
+                            <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-paperclip mr-2 text-primary"></i>
+                                Lampiran
+                            </label>
+                            
+                            <!-- Current Attachment -->
                             @if ($req->attachment_path)
-                                <div class="mb-2 text-sm">Lampiran saat ini: 
-                                    <a href="{{ asset('storage/'.$req->attachment_path) }}" target="_blank" class="text-indigo-600 hover:underline">Lihat</a>
+                                <div class="mb-4 p-4 bg-gray-50 rounded-xl">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-file text-primary text-lg"></i>
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">Lampiran Saat Ini</p>
+                                                <p class="text-xs text-gray-500">File terlampir pada pengajuan</p>
+                                            </div>
+                                        </div>
+                                        <a href="{{ asset('storage/'.$req->attachment_path) }}" target="_blank" 
+                                           class="inline-flex items-center px-3 py-2 bg-primary text-white rounded-lg text-xs font-medium hover:bg-secondary transition-colors">
+                                            <i class="fas fa-eye mr-1"></i>
+                                            Lihat File
+                                        </a>
+                                    </div>
                                 </div>
                             @endif
-                            <input id="attachment" type="file" name="attachment" class="mt-1 block w-full text-sm text-gray-700" />
-                            <x-input-error :messages="$errors->get('attachment')" class="mt-2" />
+
+                            <!-- New Attachment Upload -->
+                            @if($req->status === 'pending')
+                            <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-primary transition-all cursor-pointer"
+                                 id="fileUploadArea">
+                                <input type="file" id="attachment" name="attachment" class="hidden">
+                                <div class="flex flex-col items-center justify-center space-y-3">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Klik untuk upload lampiran baru</p>
+                                        <p class="text-xs text-gray-400 mt-1">PDF, JPG, PNG (max. 5MB)</p>
+                                    </div>
+                                    <button type="button" onclick="document.getElementById('attachment').click()" 
+                                            class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-secondary transition-colors">
+                                        <i class="fas fa-folder-open mr-2"></i>
+                                        Pilih File Baru
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="fileName" class="mt-3 text-sm text-gray-600 hidden flex items-center justify-center space-x-2">
+                                <i class="fas fa-file text-primary"></i>
+                                <span id="fileNameText"></span>
+                                <button type="button" onclick="removeFile()" class="text-rose-500 hover:text-rose-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            @else
+                            <div class="p-4 bg-gray-50 rounded-xl text-center">
+                                <i class="fas fa-info-circle text-gray-400 text-lg mb-2"></i>
+                                <p class="text-sm text-gray-600">Tidak dapat mengubah lampiran karena pengajuan sudah diproses</p>
+                            </div>
+                            @endif
+                            
+                            @error('attachment')
+                                <div class="flex items-center mt-2 text-sm text-rose-600">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
-                        <div class="flex items-center justify-end gap-3">
-                            <a href="{{ route('requests.index') }}" class="text-gray-600 hover:text-gray-900 text-sm">Batal</a>
-                            <x-primary-button>
-                                Simpan Perubahan
-                            </x-primary-button>
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-gray-200">
+                            <!-- Tombol Kembali Mobile -->
+                            <a href="{{ route('requests.index') }}" class="sm:hidden w-full flex items-center justify-center space-x-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Kembali</span>
+                            </a>
+                            
+                            <div class="flex items-center gap-3 w-full sm:w-auto">
+                                <!-- Tombol Kembali Desktop -->
+                                <a href="{{ route('requests.index') }}" class="hidden sm:flex items-center space-x-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors">
+                                    <i class="fas fa-arrow-left"></i>
+                                    <span>Kembali</span>
+                                </a>
+                                @if($req->status === 'pending')
+                                <button type="submit" class="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-6 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg">
+                                    <i class="fas fa-save mr-2"></i>
+                                    <span>Simpan Perubahan</span>
+                                </button>
+                                @else
+                                <div class="text-sm text-gray-500 px-4 py-2">
+                                    Pengajuan sudah diproses, tidak dapat diubah
+                                </div>
+                                @endif
+                            </div>
                         </div>
                     </form>
                 </div>
+
+                <!-- Info Card -->
+                <div class="mt-6 bg-blue-50 border border-blue-200 rounded-2xl p-6">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-info-circle text-blue-500 text-lg mt-0.5"></i>
+                        <div>
+                            <h3 class="font-semibold text-blue-800 text-sm">Informasi Edit Pengajuan</h3>
+                            <ul class="mt-2 text-xs text-blue-700 space-y-1">
+                                <li>• Hanya pengajuan dengan status "Pending" yang dapat diubah</li>
+                                <li>• Pastikan data yang diperbarui sudah benar dan lengkap</li>
+                                <li>• Lampiran baru akan menggantikan lampiran lama</li>
+                                <li>• Pengajuan yang sudah disetujui atau ditolak tidak dapat diubah</li>
+                                <li>• Tim admin akan meninjau perubahan yang dilakukan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
-</x-app-layout>
+
+    <script>
+        // Character counter for description
+        const descriptionTextarea = document.getElementById('description');
+        const charCount = document.getElementById('charCount');
+
+        descriptionTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length + ' karakter';
+        });
+
+        // File upload handling (only for pending requests)
+        @if($req->status === 'pending')
+        const fileInput = document.getElementById('attachment');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileNameDiv = document.getElementById('fileName');
+        const fileNameText = document.getElementById('fileNameText');
+
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                fileNameText.textContent = file.name;
+                fileNameDiv.classList.remove('hidden');
+                fileUploadArea.classList.add('hidden');
+            }
+        });
+
+        function removeFile() {
+            fileInput.value = '';
+            fileNameDiv.classList.add('hidden');
+            fileUploadArea.classList.remove('hidden');
+        }
+
+        // Drag and drop functionality
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                const file = e.dataTransfer.files[0];
+                fileNameText.textContent = file.name;
+                fileNameDiv.classList.remove('hidden');
+                this.classList.add('hidden');
+            }
+        });
+
+        // File upload area click
+        fileUploadArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+        @endif
+
+        // Form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const requiredInputs = form.querySelectorAll('[required]');
+            
+            requiredInputs.forEach(input => {
+                input.addEventListener('invalid', function(e) {
+                    e.preventDefault();
+                    this.classList.add('border-rose-500');
+                    
+                    const errorDiv = this.parentElement.querySelector('.text-rose-600');
+                    if (errorDiv) {
+                        errorDiv.classList.remove('hidden');
+                    }
+                });
+                
+                input.addEventListener('input', function() {
+                    this.classList.remove('border-rose-500');
+                    const errorDiv = this.parentElement.querySelector('.text-rose-600');
+                    if (errorDiv) {
+                        errorDiv.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
