@@ -203,6 +203,26 @@
                         </div>
                     </a>
 
+                    <!-- Izin Tidak Masuk -->
+                    <a href="{{ route('izin.create') }}" class="action-card block bg-white rounded-2xl p-6 shadow-soft border border-gray-100 hover:shadow-medium transition-all group">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-xl bg-gradient-to-r from-rose-500 to-red-500 text-white mr-4 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-user-minus text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Izin Tidak Masuk</h3>
+                                <p class="text-sm text-gray-600 mt-1">Ajukan sakit/pribadi/lainnya</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-xs text-gray-500">Form khusus izin</span>
+                            <span class="text-primary text-sm font-medium flex items-center">
+                                Ajukan
+                                <i class="fas fa-arrow-right ml-1 text-xs group-hover:translate-x-1 transition-transform"></i>
+                            </span>
+                        </div>
+                    </a>
+
                     <!-- Gaji -->
                     <a href="{{ route('payrolls.index') }}" class="action-card block bg-white rounded-2xl p-6 shadow-soft border border-gray-100 hover:shadow-medium transition-all group">
                         <div class="flex items-center mb-4">

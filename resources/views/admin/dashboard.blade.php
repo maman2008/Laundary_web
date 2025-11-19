@@ -195,7 +195,7 @@
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <!-- Absensi -->
                     <a href="{{ route('admin.attendance.index') }}" class="action-card block bg-white rounded-2xl p-6 shadow-soft border border-gray-100 hover:shadow-medium transition-all">
                         <div class="flex items-center mb-4">
@@ -222,6 +222,23 @@
                             <h3 class="text-lg font-semibold text-gray-900">Pengajuan</h3>
                         </div>
                         <p class="text-sm text-gray-600">Kelola pengajuan karyawan</p>
+                        <div class="mt-4 flex justify-end">
+                            <span class="text-primary text-sm font-medium flex items-center">
+                                Kelola
+                                <i class="fas fa-arrow-right ml-1 text-xs"></i>
+                            </span>
+                        </div>
+                    </a>
+
+                    <!-- Izin Tidak Masuk -->
+                    <a href="{{ route('admin.izin.index') }}" class="action-card block bg-white rounded-2xl p-6 shadow-soft border border-gray-100 hover:shadow-medium transition-all">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-xl bg-gradient-to-r from-rose-500 to-red-500 text-white mr-4">
+                                <i class="fas fa-user-minus text-lg"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">Izin Tidak Masuk</h3>
+                        </div>
+                        <p class="text-sm text-gray-600">Kelola izin sakit/pribadi/lainnya</p>
                         <div class="mt-4 flex justify-end">
                             <span class="text-primary text-sm font-medium flex items-center">
                                 Kelola

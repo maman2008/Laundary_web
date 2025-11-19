@@ -3,10 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\EmployeeRequestController;
+use App\Http\Controllers\IzinController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Admin\AdminRequestController;
+use App\Http\Controllers\Admin\AdminIzinController;
 use App\Http\Controllers\Admin\AdminPayrollController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +40,10 @@ Route::middleware(['auth', 'role:karyawan'])->group(function () {
     Route::put('/pengajuan/{id}', [EmployeeRequestController::class, 'update'])->name('requests.update');
     Route::delete('/pengajuan/{id}', [EmployeeRequestController::class, 'destroy'])->name('requests.destroy');
 
+    // Izin Tidak Masuk (terpisah dari pengajuan umum)
+    Route::get('/izin-tidak-masuk', [IzinController::class, 'create'])->name('izin.create');
+    Route::post('/izin-tidak-masuk', [IzinController::class, 'store'])->name('izin.store');
+
     // Gaji karyawan
     Route::get('/gaji', [PayrollController::class, 'index'])->name('payrolls.index');
 });
@@ -54,6 +60,11 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->grou
     Route::get('/pengajuan', [AdminRequestController::class, 'index'])->name('requests.index');
     Route::post('/pengajuan/{id}/accept', [AdminRequestController::class, 'accept'])->name('requests.accept');
     Route::post('/pengajuan/{id}/reject', [AdminRequestController::class, 'reject'])->name('requests.reject');
+
+    // Izin Tidak Masuk (khusus)
+    Route::get('/izin-tidak-masuk', [AdminIzinController::class, 'index'])->name('izin.index');
+    Route::post('/izin-tidak-masuk/{id}/accept', [AdminIzinController::class, 'accept'])->name('izin.accept');
+    Route::post('/izin-tidak-masuk/{id}/reject', [AdminIzinController::class, 'reject'])->name('izin.reject');
 
     // Gaji
     Route::get('/gaji', [AdminPayrollController::class, 'index'])->name('payroll.index');
