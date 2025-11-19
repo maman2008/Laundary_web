@@ -204,7 +204,7 @@
                     </a>
 
                     <!-- Izin Tidak Masuk -->
-                    <a href="{{ route('izin.create') }}" class="action-card block bg-white rounded-2xl p-6 shadow-soft border border-gray-100 hover:shadow-medium transition-all group">
+                    <a href="{{ route('izin.index') }}" class="action-card block bg-white rounded-2xl p-6 shadow-soft border border-gray-100 hover:shadow-medium transition-all group">
                         <div class="flex items-center mb-4">
                             <div class="p-3 rounded-xl bg-gradient-to-r from-rose-500 to-red-500 text-white mr-4 group-hover:scale-110 transition-transform">
                                 <i class="fas fa-user-minus text-lg"></i>

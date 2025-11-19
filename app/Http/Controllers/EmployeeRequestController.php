@@ -12,6 +12,7 @@ class EmployeeRequestController extends Controller
     public function index()
     {
         $requests = EmployeeRequest::where('user_id', Auth::id())
+            ->where('type', '!=', 'izin_tidak_masuk')
             ->latest()->paginate(10);
         return view('requests.index', compact('requests'));
     }

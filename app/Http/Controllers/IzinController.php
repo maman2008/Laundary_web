@@ -8,14 +8,20 @@ use Illuminate\Support\Facades\Auth;
 
 class IzinController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $requests = \App\Models\EmployeeRequest::where('user_id', Auth::id())
-            ->where('type', 'izin_tidak_masuk')
-            ->latest()
-            ->paginate(10);
+        $status = $request->string('status')->toString();
 
-        return view('izin.index', compact('requests'));
+        $query = \App\Models\EmployeeRequest::where('user_id', Auth::id())
+            ->where('type', 'izin_tidak_masuk');
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $requests = $query->latest()->paginate(10)->withQueryString();
+
+        return view('izin.index', compact('requests', 'status'));
     }
 
     public function create()
@@ -49,6 +55,6 @@ class IzinController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('dashboard')->with('status', 'Izin tidak masuk berhasil diajukan.');
+        return redirect()->route('izin.index')->with('status', 'Izin tidak masuk berhasil diajukan.');
     }
 }
