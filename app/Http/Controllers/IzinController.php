@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\Auth;
 
 class IzinController extends Controller
 {
+    public function index()
+    {
+        $requests = \App\Models\EmployeeRequest::where('user_id', Auth::id())
+            ->where('type', 'izin_tidak_masuk')
+            ->latest()
+            ->paginate(10);
+
+        return view('izin.index', compact('requests'));
+    }
+
     public function create()
     {
         return view('izin.create');

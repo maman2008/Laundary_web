@@ -41,7 +41,8 @@ Route::middleware(['auth', 'role:karyawan'])->group(function () {
     Route::delete('/pengajuan/{id}', [EmployeeRequestController::class, 'destroy'])->name('requests.destroy');
 
     // Izin Tidak Masuk (terpisah dari pengajuan umum)
-    Route::get('/izin-tidak-masuk', [IzinController::class, 'create'])->name('izin.create');
+    Route::get('/izin-tidak-masuk', [IzinController::class, 'index'])->name('izin.index');
+    Route::get('/izin-tidak-masuk/buat', [IzinController::class, 'create'])->name('izin.create');
     Route::post('/izin-tidak-masuk', [IzinController::class, 'store'])->name('izin.store');
 
     // Gaji karyawan

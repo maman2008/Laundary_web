@@ -14,7 +14,9 @@ class AdminDashboardController extends Controller
     {
         $totalAttendancesToday = Attendance::whereDate('check_in_at', now()->toDateString())->count();
         $lateToday = Attendance::whereDate('check_in_at', now()->toDateString())->where('is_late', true)->count();
-        $pendingRequests = EmployeeRequest::where('status', 'pending')->count();
+        $pendingRequests = EmployeeRequest::where('status', 'pending')
+            ->where('type', '!=', 'izin_tidak_masuk')
+            ->count();
         $pendingPayrolls = Payroll::where('status', 'pending')->count();
 
         return view('admin.dashboard', compact('totalAttendancesToday', 'lateToday', 'pendingRequests', 'pendingPayrolls'));

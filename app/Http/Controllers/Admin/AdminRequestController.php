@@ -16,6 +16,7 @@ class AdminRequestController extends Controller
         $status = $request->string('status')->toString();
 
         $requests = EmployeeRequest::with('user')
+            ->where('type', '!=', 'izin_tidak_masuk')
             ->when($status, fn ($q) => $q->where('status', $status))
             ->latest()->paginate(15)->withQueryString();
 
